@@ -12,7 +12,6 @@ then
         echo "Enabling boost..."
         kdialog --passivepopup 'Enabling boost...'
         pkexec bash -c 'echo 1 > /sys/devices/system/cpu/cpufreq/boost'
-        kdialog --passivepopup 'CPU boost enabled'
 #         sudo sh -c 'echo 1 > /sys/devices/system/cpu/cpufreq/boost'
 #         echo "Setting profile to 'Balanced'"
 #         asusctl profile -P Balanced
@@ -26,9 +25,19 @@ else
         echo "Disabling boost..."
         kdialog --passivepopup 'Disabling boost...'
         pkexec bash -c 'echo 0 > /sys/devices/system/cpu/cpufreq/boost'
-        kdialog --passivepopup 'CPU boost disabled.'
 #         sudo sh -c 'echo 0 > /sys/devices/system/cpu/cpufreq/boost'
 #         echo "Setting profile to 'Quiet'"
 #         asusctl profile -P Quiet
 #     fi
 fi
+
+BOOST=$(cat /sys/devices/system/cpu/cpufreq/boost)
+
+if [[ $BOOST == 0 ]]
+then
+    BOOST="Disabled"
+else
+    BOOST="Enabled"
+fi
+
+kdialog --passivepopup "CPU boost: $BOOST."
